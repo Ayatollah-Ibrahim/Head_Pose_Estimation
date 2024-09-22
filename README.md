@@ -63,7 +63,6 @@ Ensure that you have Python 3.6 or later installed.
 - `face_pose_estimation.py`: Main script for face pose estimation.
 - `requirements.txt`: List of required packages.
 - `data/`: Directory containing the AFLW2000-3D dataset and processed outputs.
-- `results/`: Directory for storing output images with pose estimations.
 - `README.md`: This documentation file.
 
 ## Detailed Explanation of Key Components
