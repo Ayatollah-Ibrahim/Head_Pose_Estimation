@@ -6,7 +6,7 @@ import cv2
 from sklearn.model_selection import train_test_split
 from xgboost import XGBRegressor
 from dataset import create_dataset
-from image_processing import draw_axis
+from image_processing import draw_axis, extract_face_mesh
 from pose_estimation import compute_pitch_features, compute_yaw_features, compute_roll_feature
 
 def display_image_with_axes(jpeg_folder, dataset, pitch_model, yaw_model, roll_model):
