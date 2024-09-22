@@ -2,6 +2,7 @@ import os
 import random
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 import cv2
 from sklearn.model_selection import train_test_split
 from xgboost import XGBRegressor
