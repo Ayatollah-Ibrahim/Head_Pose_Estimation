@@ -43,7 +43,7 @@ To set up this project, follow the steps below:
 
 ```bash
 git clone https://github.com/Ayatollah-Ibrahim/Head_Pose_Estimation.git
-cd face-pose-estimation
+cd Head-Pose-Estimation
 ```
 
 ### 2. **Install Required Libraries**
