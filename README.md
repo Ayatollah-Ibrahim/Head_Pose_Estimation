@@ -1,118 +1,186 @@
-# Face Pose Estimation from 2D Images
+# **Head Pose Estimation**
 
-## Overview
+## **Overview**
 
-This repository contains a Python implementation for estimating the yaw, pitch, and roll of human faces in images using a 3D facial landmark detection approach. The project utilizes a subset of the AFLW2000-3D dataset, specifically 64 images annotated with corresponding .mat files. By leveraging these annotations, we aim to build a robust model that accurately predicts head poses from 2D images, even in challenging orientations.
+This repository contains a Python implementation for estimating the yaw, pitch, and roll of human faces in images using 3D facial landmark detection. The project is based on a subset of the AFLW2000-3D dataset, utilizing 64 images annotated with .mat files, from which the 3D facial landmarks are extracted for head pose estimation.
 
-### Idea Behind the Project
+## **Dataset**
 
-The ability to estimate head poses is essential for various applications, including human-computer interaction, virtual reality, and facial recognition. Traditional 2D face detection techniques often struggle with poses that deviate significantly from frontal views. This project tackles the challenge by using 3D facial landmarks, allowing the model to better understand the spatial orientation of a face. 
+### **AFLW2000-3D Subset**
 
-### Methodology
+For this project, a subset of 64 images from the AFLW2000-3D dataset is used, which contains images annotated with 68 facial landmarks in 3D. These annotations provide crucial information for training and evaluating head pose estimation models.
 
-1. **Dataset Usage**: A subset of the AFLW2000-3D dataset is critical for training and evaluating our models. Each of the 64 images is annotated with 68 facial landmarks, which provide key information about the face's geometry and pose.
-
-2. **Feature Extraction**: The model computes various geometric features from the landmarks, such as distances and angles between key points. These features serve as input for our machine learning algorithms, which predict the head pose.
-
-3. **Model Training**: We use several regression models, including Random Forest and XGBoost, to predict yaw, pitch, and roll. Each model is trained on the extracted features and evaluated based on its accuracy in predicting head poses.
-
-4. **Evaluation Metrics**: Model performance is assessed using metrics like Mean Squared Error (MSE) and R² score, providing insight into the effectiveness of the predictions.
-
-## Dataset Reference
-
-### AFLW2000-3D
-
-The AFLW2000-3D dataset was introduced by Zhu et al. in their paper titled "Face Alignment Across Large Poses: A 3D Solution." This dataset contains 2000 images annotated with 68-point 3D facial landmarks. In this project, we use a subset of 64 images along with their corresponding .mat files for pose estimation.
-
-- **Citation**:
+- **Citation**:  
   ```
   Zhu, X., Wang, Z., & Liu, Y. (2016). Face Alignment Across Large Poses: A 3D Solution. In European Conference on Computer Vision (ECCV).
   ```
 
-## Installation
+- **Source**: [AFLW2000-3D on TensorFlow Datasets](https://www.tensorflow.org/datasets/catalog/aflw2k3d)
 
-To run the code in this repository, you need to install the following packages:
+## **Project Structure**
+
+```
+.
+├── data/
+│   ├── JPEG/            # Folder containing 64 images used in the project
+│   ├── MAT/             # Folder containing .mat files with 3D landmark annotations
+├── .gitignore           # Git ignore file
+├── LICENSE              # License file (MIT)
+├── README.md            # This README file
+├── dataset.py           # Script to load and preprocess dataset
+├── image_processing.py  # Script for image processing and feature extraction
+├── main.py              # Main script to run the pose estimation pipeline
+├── model_evaluation.py  # Script to evaluate the trained model
+├── pose_estimation.py   # Script for model training and prediction
+├── requirements.txt     # Python package dependencies
+```
+
+## **Installation**
+
+To set up this project, follow the steps below:
+
+### 1. **Clone the Repository**
+
+```bash
+git clone https://github.com/Ayatollah-Ibrahim/Head_Pose_Estimation.git
+cd face-pose-estimation
+```
+
+### 2. **Install Required Libraries**
+
+Install the necessary Python libraries by running the following command:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Ensure that you have Python 3.6 or later installed.
+Ensure you are using Python 3.6 or higher.
 
-## Usage
+### 3. **Dataset Setup**
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/Ayatollah-Ibrahim/Head_Pose_Estimation.git
-   cd Head_Pose_Estimation
-   ```
+Ensure you have the following folder structure inside the `data` folder:
 
-2. **Prepare the Data**:
-   Place your 64 annotated images and their corresponding .mat files in the designated `data/JPEG` and `data/MAT` directories, respectively. Ensure the structure looks like this:
-   ```
-   data/
-       JPEG/
-           image1.jpg
-           image2.jpg
-           ...
-       MAT/
-           image1.mat
-           image2.mat
-           ...
-   ```
+- `JPEG/`: Contains 64 facial images.
+- `MAT/`: Contains .mat files with the 3D annotations corresponding to the images in the `JPEG/` folder.
 
-3. **Run the Code**:
-   You can execute the main script using:
+These annotations will be used by the model to extract facial landmarks.
+
+## **Usage**
+
+### **Running the Code**
+
+1. **Dataset Preparation**: Ensure the images and .mat files are in the correct folders (`JPEG/` and `MAT/`) under the `data/` directory.
+2. **Start Pose Estimation**: To run the main pipeline, execute the following command:
+
    ```bash
    python main.py
    ```
 
-4. **Input and Output**:
-   The script will load images and annotations, extract features, train models, and display images with predicted head poses overlaid. Make sure to monitor the console for any output or error messages during execution.
+### **Code Breakdown**
 
-## Code Structure
+- `dataset.py`: 
+  - Contains the `create_dataset()` function to load images and their corresponding 3D landmark annotations from the .mat files.
+  
+- `image_processing.py`: 
+  - Handles image pre-processing and extraction of 68 3D landmarks. 
+  - Also computes geometric features like distances and angles between key facial points, which are crucial for pose estimation.
+    ### **Yaw, Pitch, and Roll Feature Extraction**:
+    
+    Let’s rewrite the formulas using plain text and symbols that work in markdown files. Here's the updated version:
+    
+    
+    **Facial Landmark Points for Feature Extraction**
+    In this project, we utilize specific facial landmarks to accurately estimate the yaw, pitch, and roll angles of human faces. The following landmark points, extracted from the AFLW2000-3D dataset, form the basis of our feature extraction process:
+    
+    **Landmark Definitions**
+    
+    1. **Nose Tip (Index 1)**: This point serves as a central reference for facial alignment.
+    2. **Forehead (Index 10)**: Located on the forehead, this point helps provide vertical orientation data.
+    3. **Chin (Index 152)**: The bottom point of the face, crucial for measuring vertical distances.
+    4. **Middle of the Face (Index 168)**: Positioned between the two eyes at the nose level, this point aids in assessing horizontal alignment.
+    5. **Left Eye's Outer Corner (Index 263)**: The outer corner of the left eye, used for calculating angles and distances related to head orientation.
+    6. **Right Eye's Outer Corner (Index 33)**: The outer corner of the right eye, which assists in the assessment of yaw.
+       
+    ![canonical_face_model_uv_visualization](https://github.com/user-attachments/assets/dcfacd6b-5a1f-4598-8014-3b8a34e69bb4)
 
-- `main.py`: Main script for face pose estimation.
-- `dataset.py`: Handles dataset creation and preprocessing.
-- `image_processing.py`: Contains functions for image processing and feature extraction.
-- `model_evaluation.py`: Responsible for evaluating model performance.
-- `pose_estimation.py`: Contains functions for pose estimation using trained models.
-- `requirements.txt`: List of required packages.
-- `README.md`: This documentation file.
+    **Feature Extraction Process**
+    
+    The geometric relationships among these landmarks allow us to derive meaningful features for head pose estimation:
+    
+    - **Pitch Calculation**: 
+      - We compute the distances between the chin, nose tip, and forehead. Ratios of these distances give us a normalized measure of the vertical alignment of facial features, which is essential for estimating the pitch angle.
+    
+    - **Yaw Calculation**: 
+      - The distances between the corners of the eyes (indices 33 and 263) and the middle of the face (index 168) are calculated. Ratios of these distances quantify the horizontal alignment of facial features, providing the necessary information to estimate the yaw angle.
+    
+    - **Roll Calculation**: 
+      - The direction vector from the chin (index 152) to the nose tip (index 1) is computed and compared with a vertical vector. The angle formed gives us the roll of the head, indicating how much the face is tilted to either side.
+    
+    **How to Use These Points**
+    
+    1. **Extraction**: 
+       - The landmark coordinates are extracted from the dataset and stored in a dictionary format for easy access.
+    
+    2. **Feature Functions**: 
+       - The functions `compute_pitch_features`, `compute_yaw_features`, and `compute_roll_feature` are implemented to calculate the respective ratios and angles using the defined landmarks.
+    
+    3. **Integration**: 
+       - These extracted features are then used as input for machine learning models (e.g., Random Forest, XGBoost) to predict the head pose accurately.
+    
+    By leveraging these specific facial landmarks, our feature extraction approach provides a robust framework for estimating head poses, facilitating applications in facial recognition, driver monitoring, and augmented reality.
 
-## Detailed Explanation of Key Components
 
-### 1. Dataset Creation
+- `pose_estimation.py`: 
+  - This script contains the models used for predicting yaw, pitch, and roll. The landmarks are passed as input, and machine learning algorithms (Random Forest, XGBoost) are trained to predict the head pose.
 
-The `create_dataset` function in `dataset.py` is responsible for loading images and their corresponding landmark annotations from the specified directories. It extracts the 68 facial landmarks from each image and organizes the data for further processing.
+- `model_evaluation.py`: 
+  - Evaluates the model’s performance using metrics such as Mean Squared Error (MSE) and R² score. It also provides visualizations of predicted poses on the input images.
 
-### 2. Feature Extraction
+### **Example Command**
 
-The implementation computes various geometric features based on the distances and angles between selected facial landmarks. These features are crucial for accurately estimating yaw, pitch, and roll.
+```bash
+python main.py
+```
 
-### 3. Model Training
+## **Key Components**
 
-The project utilizes regression models like Random Forest and XGBoost, which are trained using the features extracted from the landmarks. Hyperparameters are tuned to optimize performance, ensuring the best possible predictions.
+1. **Dataset Loading**: 
+   - The `dataset.py` script loads the images and annotations, converting them into a format suitable for the pose estimation task.
+  
+2. **Feature Extraction**: 
+   - The `image_processing.py` script extracts relevant geometric features from the 3D facial landmarks. Features include distances and angles between key points (e.g., between the eyes, nose, and mouth), which are critical for determining yaw, pitch, and roll.
 
-### 4. Evaluation
+3. **Pose Estimation**: 
+   - In `pose_estimation.py`, regression models (Random Forest and XGBoost) are trained to predict the head pose using the extracted features.
 
-Model evaluation is conducted in `model_evaluation.py`, where metrics like Mean Squared Error (MSE) and R² score are calculated to assess the accuracy of predictions on the test data.
+4. **Model Evaluation**: 
+   - The `model_evaluation.py` script evaluates the models' predictions on unseen data, calculating error metrics and visualizing results.
 
-## Results
+## **Results**
 
-The results from model training and evaluation will be displayed in the terminal. Visualizations of the predicted head poses overlaid on the input images will also be generated.
+- **Evaluation Metrics**: We use Mean Squared Error (MSE) and R² score to evaluate the accuracy of yaw, pitch, and roll predictions.
+- **Visual Outputs**: Predicted poses are overlaid on the original images, allowing qualitative assessment.
 
-### Example Output
+Here are some sample results:
 
-Below are examples of the output images with predicted head poses:
+![result2](https://github.com/user-attachments/assets/e268c942-b4c9-4137-8114-60f10c8b9568)
+![result1](https://github.com/user-attachments/assets/bda49138-4f1d-4de2-b885-ad0bbb3bac55)
 
-![result1](https://github.com/user-attachments/assets/0a17406e-52ae-43ba-a33a-178bf70e53e0)
-![result2](https://github.com/user-attachments/assets/e2c3a5ec-f224-4c15-b154-c8ac15d42190)
+## **Contributing**
 
-## Contributing
+Contributions from the community are highly encouraged. Please feel free to open an issue or submit a pull request if you encounter any bugs, have suggestions, or would like to add new features.
 
-Contributions are welcome! Please open an issue or submit a pull request for any improvements, bug fixes, or additional features.
-
-## License
+## **License**
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+## **Future Work**
+
+In future updates, I plan to:
+- Add support for additional datasets.
+- Improve the model by experimenting with deep learning architectures.
+- Explore real-time head pose estimation.
+
+## **Contact**
+
+If you have any questions or suggestions, feel free to contact us by opening an issue in this repository.
